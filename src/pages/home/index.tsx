@@ -1,9 +1,10 @@
+// Home page
 import { NavLink } from 'react-router-dom';
 import mainImg from '@/shared/assets/main.png';
 
 const HomePage = () => {
   return (
-    <div className='bg-gradient-to-r from-blue-500 to-purple-600 min-h-[calc(100vh-144px)] flex flex-col'>
+    <div className='bg-gradient-to-r from-blue-500 to-purple-600 min-h-[calc(100vh-144px)] py-5 flex flex-col'>
       <main className='flex-1 flex flex-col md:flex-row items-center justify-between px-8 md:px-20 py-16'>
         <div className='text-white max-w-lg space-y-6'>
           <h2 className='text-4xl font-bold'>

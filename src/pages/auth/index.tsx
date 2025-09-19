@@ -1,4 +1,5 @@
 import AuthForm from './ui/form';
+import { NavLink } from 'react-router-dom';
 
 const AuthPage = () => {
   return (
@@ -10,12 +11,12 @@ const AuthPage = () => {
         <AuthForm />
         <p className='text-center text-sm text-gray-600 mt-4'>
           Нет аккаунта?{' '}
-          <a
-            href='/sign-up'
+          <NavLink
+            to='/sign-up'
             className='text-blue-600 hover:underline font-medium'
           >
             Зарегистрироваться
-          </a>
+          </NavLink>
         </p>
       </div>
     </div>

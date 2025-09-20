@@ -16,7 +16,10 @@ const Header = () => {
             to='/profile'
             className='flex items-center gap-3 text-white hover:opacity-80 transition'
           >
-            <div className='w-10 h-10 rounded-full border-2 border-white overflow-hidden'>
+            <span className='font-medium hidden md:block'>
+              {user.fullName || 'Профиль'}
+            </span>
+            <div className='min-w-[40px] w-10 h-10 rounded-full border-2 border-white overflow-hidden'>
               <img
                 src={user?.avatar || noAva}
                 alt='avatar'
@@ -24,7 +27,6 @@ const Header = () => {
                 '
               />
             </div>
-            <span className='font-medium'>{user.fullName || 'Профиль'}</span>
           </NavLink>
           <button
             onClick={() => {

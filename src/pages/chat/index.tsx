@@ -10,7 +10,6 @@ const ChatPage = () => {
 
   return (
     <div className='flex h-[calc(100vh-142px)] bg-gray-100 relative'>
-      {/* Sidebar для desktop + drawer для mobile */}
       <aside
         className={`
           w-64 sm:w-80 bg-white border-r border-gray-300 flex flex-col
@@ -21,13 +20,13 @@ const ChatPage = () => {
         <div className='flex items-center p-2'>
           <NavLink
             to='chat'
-            className='px-3 py-1 text-sm w-1/2 border-b-2 border-gray-200 aria-[current=page]:border-blue-600 aria-[current=page]:text-blue-600 text-center transition-all font-medium text-gray-600 hover:border-blue-600 hover:text-blue-600'
+            className='px-3 py-1 text-sm w-1/2 border-b-2 border-gray-200 aria-[current=page]:border-blue-600 aria-[current=page]:text-blue-600 text-center transition-all font-medium text-gray-600'
           >
             Чаты
           </NavLink>
           <NavLink
             to='channels'
-            className='px-3 py-1 text-sm w-1/2 border-b-2 border-gray-200 aria-[current=page]:border-blue-600 aria-[current=page]:text-blue-600 text-center transition-all font-medium text-gray-600 hover:border-blue-600 hover:text-blue-600'
+            className='px-3 py-1 text-sm w-1/2 border-b-2 border-gray-200 aria-[current=page]:border-blue-600 aria-[current=page]:text-blue-600 text-center transition-all font-medium text-gray-600'
           >
             Каналы
           </NavLink>

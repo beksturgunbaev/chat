@@ -32,11 +32,11 @@ const useSidebarContacts = () => {
                     const chatId = doc.id;
                     const chatData = doc.data() as IChat;
 
-                    const messagesRef = collection(db, "chat", chatId, "messages");
+                    const messagesRef = collection(db, "chat", `${chatId}`, "messages");
                     const messagesQuery = query(
                         messagesRef,
-                        where("lastMsgRead", "==", false),
-                        where("lastMsgSenderUid", "==", user.uid)
+                        where("read", "==", false),
+                        where("receiverUid", "==", user.uid)
                     );
 
                     const snapshot = await getDocs(messagesQuery);
@@ -71,7 +71,6 @@ const useSidebarContacts = () => {
             unsubscribeMessages.forEach(fn => fn());
         };
     }, [user?.uid]);
-
 
     return { user, chats, loading };
 };

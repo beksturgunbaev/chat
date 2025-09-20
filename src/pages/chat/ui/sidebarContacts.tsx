@@ -5,7 +5,7 @@ import { DoubleCheck, SingleCheck } from '@/shared/assets/svg';
 
 const SidebarContacts = () => {
   const { user, chats } = useSidebarContacts();
-  console.log(chats);
+
   return (
     <div className='flex-1 overflow-y-auto p-3'>
       {chats?.map((el) => {

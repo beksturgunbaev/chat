@@ -1,14 +1,17 @@
+import noAva from '@/shared/assets/no-ava.jpeg';
+
 const ChatMessage = () => {
   return (
     <div className='flex-1 flex flex-col h-full'>
-      <div className='flex items-center justify-between px-4 py-3 border-b border-gray-300 bg-white'>
-        <div>
-          <h2 className='text-lg font-bold text-gray-800'>Frontend чат</h2>
-          <p className='text-sm text-gray-500'>35 участников</p>
+      <div className='flex items-center gap-2 p-2 border-b border-gray-300 bg-white'>
+        <div className='w-12 h-12 min-w-[48px] rounded-full overflow-hidden border'>
+          <img
+            src={noAva}
+            alt='avatar'
+            className='w-full h-full object-cover'
+          />
         </div>
-        <button className='text-blue-600 text-sm font-medium hover:underline'>
-          Профиль
-        </button>
+        <p className='text-gray-800 font-medium'>Асан Айдаралиев</p>
       </div>
       <div className='flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50'>
         <div className='self-start max-w-xs px-4 py-2 rounded-2xl bg-white shadow text-gray-800'>

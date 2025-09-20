@@ -5,7 +5,16 @@ import {
 } from 'react-router-dom';
 import Layout from '../layout';
 import PrivateRoute from './private';
-import { AuthPage, ChatPage, HomePage, RegisterPage } from '@/pages';
+import {
+  AuthPage,
+  ChannelMessage,
+  ChatMessage,
+  ChatPage,
+  HomePage,
+  RegisterPage,
+  SidebarChannels,
+  SidebarContacts,
+} from '@/pages';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -14,7 +23,13 @@ export const router = createBrowserRouter(
       <Route path='sign-in' element={<AuthPage />} />
       <Route path='sign-up' element={<RegisterPage />} />
       <Route element={<PrivateRoute />}>
-        <Route path='chat' element={<ChatPage />} />
+        <Route path='app' element={<ChatPage />}>
+          <Route index element={<SidebarContacts />} />
+          <Route path='chat' element={<SidebarContacts />} />
+          <Route path='channels' element={<SidebarChannels />} />
+          <Route path='chat/:chatId' element={<ChatMessage />} />
+          <Route path='channels/:channelId' element={<ChannelMessage />} />
+        </Route>
       </Route>
     </Route>
   )

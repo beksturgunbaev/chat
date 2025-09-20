@@ -38,7 +38,7 @@ const useAuth = () => {
                     type: 'success',
                     isLoading: false,
                 });
-                window.location.href = '/chat';
+                window.location.href = '/app/chat';
             } else {
                 showToast({ message: 'Пользователь не найден в базе данных', type: 'error', isLoading: false });
             }

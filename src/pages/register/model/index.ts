@@ -44,7 +44,7 @@ const useRegister = () => {
                 type: 'success',
                 isLoading: false,
             });
-            window.location.href = '/chat';
+            window.location.href = '/app/chat';
         } catch (err: unknown) {
             let message = 'Ошибка с сервера';
 

@@ -6,7 +6,7 @@ const Header = () => {
   const user = userString ? JSON.parse(userString) : null;
 
   return (
-    <header className='bg-gradient-to-r from-blue-500 to-purple-600 flex justify-between items-center border-b border-b-gray-400 px-8 py-4 bg-white/10'>
+    <header className='bg-gradient-to-r from-blue-500 to-purple-600 flex justify-between items-center border-b border-b-gray-400 px-8 h-[72px] bg-white/10'>
       <NavLink to='' className='text-2xl font-bold text-white'>
         Chatify
       </NavLink>

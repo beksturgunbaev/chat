@@ -25,18 +25,18 @@ const RegisterForm = () => {
       </div>
       <div>
         <label
-          htmlFor='login'
+          htmlFor='email'
           className='block text-sm font-medium text-gray-700 mb-1'
         >
-          Логин
+          E-mail
         </label>
         <input
-          type='text'
-          id='login'
-          name='login'
-          value={formData.login}
+          type='email'
+          id='email'
+          name='email'
+          value={formData.email}
           onChange={handleChange}
-          placeholder='Введите логин'
+          placeholder='Введите e-mail'
           className='w-full rounded-xl border border-gray-300 px-4 py-2 focus:border-gray-400 outline-none'
           required
         />

@@ -18,3 +18,12 @@ export interface IChatList {
     data: IChat;
     unreadMessagesCount: number
 }
+
+export interface IMessage {
+    id: string;
+    text: string;
+    senderUid: string;
+    receiverUid: string;
+    read: boolean;
+    createdAt: Timestamp;
+}

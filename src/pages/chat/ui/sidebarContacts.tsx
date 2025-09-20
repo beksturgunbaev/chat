@@ -1,11 +1,15 @@
+import { Loader } from '@/widgets';
 import { NavLink } from 'react-router-dom';
 import noAva from '@/shared/assets/no-ava.jpeg';
 import useSidebarContacts from '../model/useSidebarContacts';
 import { DoubleCheck, SingleCheck } from '@/shared/assets/svg';
 
 const SidebarContacts = () => {
-  const { user, chats } = useSidebarContacts();
+  const { user, chats, loading } = useSidebarContacts();
 
+  if (loading) {
+    return <Loader height='70vh' />;
+  }
   return (
     <div className='flex-1 overflow-y-auto p-3'>
       {chats?.map((el) => {

@@ -36,3 +36,17 @@ export interface IUser {
     phone: string;
     email: string;
 }
+
+export interface IChannelList {
+    channelId: string;
+    data: IChannel;
+    unreadMessagesCount: number
+}
+
+export interface IChannel {
+    owner: string;
+    createdAt: Timestamp;
+    name: string;
+    ownerName: string;
+    members: string[]
+}

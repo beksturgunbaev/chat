@@ -1,23 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { db } from "@/shared/utils/firebase";
-import { useParams } from "react-router-dom";
-import type { IMessage } from "@/shared/types";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import type { IMessage, IUser } from "@/shared/types";
+import { useParams, useSearchParams } from "react-router-dom";
+import { collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, writeBatch } from "firebase/firestore";
 
 const useChatMessages = () => {
-    const [messages, setMessages] = useState<IMessage[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [text, setText] = useState<string>(''); // current input value
+    const [loading, setLoading] = useState(false); // loading state for messages
+    const [receiver, setReceiver] = useState<IUser>(); // recipient user
+    const [messages, setMessages] = useState<IMessage[]>([]); // chat messages
 
-    const { chatId } = useParams()
+    const { chatId } = useParams(); // get chatId from URL
+    const [searchParams] = useSearchParams(); // get search params from URL
+    const clientId = searchParams.get("user"); // userId of the recipient
+    const messagesEndRef = useRef<HTMLDivElement>(null); // ref for scrolling to the last message
+
     const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
+    const user = userString ? JSON.parse(userString) : null; // current user
 
+    // Fetch messages in real-time
     useEffect(() => {
         if (!chatId) return;
-        setLoading(true)
-        const messagesRef = collection(db, "chat", `${chatId}`, "messages");
-        const q = query(messagesRef, orderBy("time", "asc"));
+        setLoading(true);
 
+        const messagesRef = collection(db, "chat", `${chatId}`, "messages");
+        const q = query(messagesRef, orderBy("time", "asc")); // order messages by time ascending
+
+        // Subscribe to realtime updates
         const unsub = onSnapshot(q, (snapshot) => {
             const msgs: IMessage[] = snapshot.docs.map((doc) => ({
                 id: doc.id,
@@ -27,10 +36,89 @@ const useChatMessages = () => {
             setLoading(false);
         });
 
+        // Cleanup subscription on unmount
         return () => unsub();
     }, [chatId]);
 
-    return { messages, user, loading };
+    // Fetch recipient user info
+    useEffect(() => {
+        const getUserById = async () => {
+            try {
+                const userRef = doc(db, "users", `${clientId}`);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    setReceiver(userSnap.data() as IUser); // set receiver data
+                } else {
+                    alert("User not found");
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error fetching user:", error);
+                return null;
+            }
+        };
+        if (clientId) {
+            getUserById();
+        }
+    }, [clientId]);
+
+    // Send a message and update chat document atomically
+    const sendMessage = async () => {
+        if (!text.trim()) return;
+
+        const messageText = text; // store text before clearing input
+        setText(""); // clear input immediately
+
+        try {
+            const chatRef = doc(db, "chat", `${chatId}`);
+            const messagesRef = collection(db, "chat", `${chatId}`, "messages");
+
+            const batch = writeBatch(db); // batch to update chat and add message simultaneously
+
+            // Chat document data
+            const chatData = {
+                lastMsgSenderUid: user.uid,
+                lastMsgSenderName: user.fullName,
+                lastMsgSenderAvatar: user.avatar,
+                lastMsgReceiverUid: receiver?.uid,
+                lastMsgReceiverName: receiver?.fullName,
+                lastMsgReceiverAvatar: receiver?.avatar,
+                lastMsgText: messageText,
+                lastMsgRead: false,
+                lastMsgTime: serverTimestamp(),
+                users: [user.uid, receiver?.uid],
+            };
+
+            // Update or create chat document
+            batch.set(chatRef, chatData, { merge: true });
+
+            // Create new message document with auto-ID
+            const newMessageRef = doc(messagesRef);
+            batch.set(newMessageRef, {
+                text: messageText,
+                senderUid: user.uid,
+                receiverUid: receiver?.uid,
+                read: false,
+                time: serverTimestamp(),
+            });
+
+            // Commit both operations atomically
+            await batch.commit();
+            console.log("Chat and message updated simultaneously!");
+        } catch (err) {
+            console.error("Error sending message:", err);
+        } finally {
+            setText(""); // ensure input is cleared
+        }
+    };
+
+    // Scroll to the last message when messages change
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+    }, [messages]);
+
+    return { messages, user, text, receiver, loading, setText, sendMessage, messagesEndRef };
 };
 
 export default useChatMessages;

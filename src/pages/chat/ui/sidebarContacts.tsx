@@ -10,10 +10,15 @@ const SidebarContacts = () => {
   if (loading) {
     return <Loader height='70vh' />;
   }
+
   return (
     <div className='flex-1 overflow-y-auto p-3'>
       {chats?.map((el) => {
         const isSender = el.data.lastMsgSenderUid === user?.uid;
+        const isSenderUid =
+          el.data.lastMsgSenderUid === user?.uid
+            ? el.data.lastMsgReceiverUid
+            : el.data.lastMsgSenderUid;
         const displayName =
           el.data.lastMsgReceiverUid === user?.uid
             ? el.data.lastMsgSenderName
@@ -33,7 +38,7 @@ const SidebarContacts = () => {
 
         return (
           <NavLink
-            to={`/app/chat/${el.chatId}`}
+            to={`/app/chat/${el.chatId}?user=${isSenderUid}`}
             key={el.chatId}
             className='p-2 cursor-pointer border-b border-gray-100 flex items-center gap-2'
           >

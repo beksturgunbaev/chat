@@ -27,3 +27,12 @@ export interface IMessage {
     read: boolean;
     createdAt: Timestamp;
 }
+
+export interface IUser {
+    uid: string;
+    fullName: string;
+    avatar: string;
+    time: Timestamp;
+    phone: string;
+    email: string;
+}

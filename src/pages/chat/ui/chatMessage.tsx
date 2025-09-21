@@ -4,19 +4,28 @@ import useChatMessages from '../model/useChatMessages';
 import { Loader } from '@/widgets';
 
 const ChatMessage = () => {
-  const { user, messages, loading } = useChatMessages();
+  const {
+    user,
+    text,
+    loading,
+    setText,
+    receiver,
+    messages,
+    sendMessage,
+    messagesEndRef,
+  } = useChatMessages();
 
   return (
     <div className='flex-1 flex flex-col max-h-[calc(100vh-144px)] h-full overflow-hidden'>
       <div className='flex items-center gap-2 py-2 px-3 border-b border-gray-300 bg-white'>
         <div className='w-12 h-12 min-w-[48px] rounded-full overflow-hidden border'>
           <img
-            src={noAva}
+            src={receiver?.avatar || noAva}
             alt='avatar'
             className='w-full h-full object-cover'
           />
         </div>
-        <p className='text-gray-800 font-medium'>Асан Айдаралиев</p>
+        <p className='text-gray-800 font-medium'>{receiver?.fullName}</p>
       </div>
       {loading ? (
         <Loader height='100%' />
@@ -45,18 +54,30 @@ const ChatMessage = () => {
               <p>Здесь пока нет сообщений</p>
             </div>
           )}
+          <div ref={messagesEndRef}></div>
         </div>
       )}
-      <div className='p-3 border-t border-gray-300 bg-white flex items-center gap-3'>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
+        className='p-3 border-t border-gray-300 bg-white flex items-center gap-3'
+      >
         <input
           type='text'
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           placeholder='Введите сообщение...'
           className='flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:border-gray-400 outline-none'
         />
-        <button className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'>
+        <button
+          type='submit'
+          className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'
+        >
           Отправить
         </button>
-      </div>
+      </form>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import SidebarNewChat from './sidebarNewChat';
 import { useLocation } from 'react-router-dom';
 import SidebarContacts from './sidebarContacts';
 import SidebarChannels from './sidebarChannels';
@@ -16,6 +17,12 @@ export const SidebarOutlet = () => {
     location.pathname === '/app/channels'
   ) {
     return <SidebarChannels />;
+  }
+  if (
+    location.pathname.startsWith('/app/users') ||
+    location.pathname === '/app/users'
+  ) {
+    return <SidebarNewChat />;
   }
   return null;
 };

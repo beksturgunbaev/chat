@@ -34,7 +34,6 @@ const ChatPage = () => {
         <SidebarOutlet />
       </aside>
 
-      {/* Overlay для мобильного sidebar */}
       {sidebarOpen && (
         <div
           className='fixed inset-0 bg-black/30 z-20 sm:hidden'
@@ -43,7 +42,6 @@ const ChatPage = () => {
       )}
 
       <main className='flex-1 flex flex-col'>
-        {/* Верхняя панель с кнопкой для mobile */}
         <div className='flex items-center justify-between p-2 sm:hidden bg-white border-b border-gray-300'>
           <button
             onClick={() => setSidebarOpen(true)}
@@ -55,7 +53,6 @@ const ChatPage = () => {
           <div />
         </div>
 
-        {/* Контент */}
         <div className='flex-1 flex items-center justify-center'>
           {isEmptyRight ? (
             <EmptyChat

@@ -5,6 +5,7 @@ const useMain = () => {
     const isEmptyRight =
         location.pathname === '/app/chat' ||
         location.pathname === '/app/channels' ||
+        location.pathname === '/app/users' ||
         location.pathname === '/app';
 
     return { isEmptyRight }

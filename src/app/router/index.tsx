@@ -7,13 +7,14 @@ import Layout from '../layout';
 import PrivateRoute from './private';
 import {
   AuthPage,
-  ChannelMessage,
-  ChatMessage,
   ChatPage,
   HomePage,
+  ChatMessage,
   RegisterPage,
-  SidebarChannels,
+  SidebarNewChat,
+  ChannelMessage,
   SidebarContacts,
+  SidebarChannels,
 } from '@/pages';
 
 export const router = createBrowserRouter(
@@ -26,6 +27,7 @@ export const router = createBrowserRouter(
         <Route path='app' element={<ChatPage />}>
           <Route index element={<SidebarContacts />} />
           <Route path='chat' element={<SidebarContacts />} />
+          <Route path='users' element={<SidebarNewChat />} />
           <Route path='channels' element={<SidebarChannels />} />
           <Route path='chat/:chatId' element={<ChatMessage />} />
           <Route path='channels/:channelId' element={<ChannelMessage />} />

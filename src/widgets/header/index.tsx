@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import noAva from '@/shared/assets/no-ava.jpeg';
 
 const Header = () => {
   const userString = localStorage.getItem('user');
@@ -12,22 +11,14 @@ const Header = () => {
       </NavLink>
       {user ? (
         <div className='flex items-center gap-6'>
-          <NavLink
-            to='/profile'
-            className='flex items-center gap-3 text-white hover:opacity-80 transition'
-          >
+          <div className='flex items-center gap-3 text-white hover:opacity-80 transition'>
             <span className='font-medium hidden md:block'>
               {user.fullName || 'Профиль'}
             </span>
-            <div className='min-w-[40px] w-10 h-10 rounded-full border-2 border-white overflow-hidden'>
-              <img
-                src={user?.avatar || noAva}
-                alt='avatar'
-                className='w-full h-full object-cover
-                '
-              />
+            <div className='w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white font-semibold text-lg'>
+              {user?.fullName.charAt(0)}
             </div>
-          </NavLink>
+          </div>
           <button
             onClick={() => {
               localStorage.removeItem('user');

@@ -80,10 +80,8 @@ const useChatMessages = () => {
             const chatData = {
                 lastMsgSenderUid: user.uid,
                 lastMsgSenderName: user.fullName,
-                lastMsgSenderAvatar: user.avatar,
                 lastMsgReceiverUid: receiver?.uid,
                 lastMsgReceiverName: receiver?.fullName,
-                lastMsgReceiverAvatar: receiver?.avatar,
                 lastMsgText: messageText,
                 lastMsgRead: false,
                 lastMsgTime: serverTimestamp(),

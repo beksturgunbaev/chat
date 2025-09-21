@@ -69,10 +69,8 @@ const useSidebarNewChat = () => {
                     lastMsgRead: false,
                     lastMsgSenderUid: user.uid,
                     lastMsgSenderName: user.fullName,
-                    lastMsgSenderAvatar: user.avatar,
                     lastMsgReceiverUid: el?.uid,
                     lastMsgReceiverName: el?.fullName,
-                    lastMsgReceiverAvatar: el?.avatar,
                 });
                 showToast({
                     message: 'Чат успешно создан!',

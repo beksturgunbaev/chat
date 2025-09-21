@@ -1,5 +1,4 @@
 import { Loader } from '@/widgets';
-import noAva from '@/shared/assets/no-ava.jpeg';
 import useSidebarNewChat from '../model/useSidebarNewChat';
 
 const SidebarNewChat = () => {
@@ -38,15 +37,8 @@ const SidebarNewChat = () => {
           onClick={() => handleCreateChat(el)}
           className='p-2 cursor-pointer border-b border-gray-100 flex items-center gap-2'
         >
-          <div className='w-10 h-10 min-w-[40px] rounded-full overflow-hidden border'>
-            <img
-              src={el?.avatar || noAva}
-              onError={(e) => {
-                e.currentTarget.src = noAva;
-              }}
-              className='w-full h-full object-cover'
-              alt='avatar'
-            />
+          <div className='w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white font-semibold text-lg'>
+            {el?.fullName.charAt(0)}
           </div>
           <div className='flex-1'>
             <div className='flex justify-between items-center'>

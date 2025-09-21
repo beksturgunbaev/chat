@@ -1,4 +1,3 @@
-import noAva from '@/shared/assets/no-ava.jpeg';
 import emptyChat from '@/shared/assets/empty-chat.png';
 import useChatMessages from '../model/useChatMessages';
 import { Loader } from '@/widgets';
@@ -18,12 +17,8 @@ const ChatMessage = () => {
   return (
     <div className='flex-1 flex flex-col max-h-[calc(100vh-144px)] h-full overflow-hidden'>
       <div className='flex items-center gap-2 py-2 px-3 border-b border-gray-300 bg-white'>
-        <div className='w-12 h-12 min-w-[48px] rounded-full overflow-hidden border'>
-          <img
-            src={receiver?.avatar || noAva}
-            alt='avatar'
-            className='w-full h-full object-cover'
-          />
+        <div className='w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 text-white font-semibold text-lg'>
+          {receiver?.fullName.charAt(0)}
         </div>
         <p className='text-gray-800 font-medium'>{receiver?.fullName}</p>
       </div>

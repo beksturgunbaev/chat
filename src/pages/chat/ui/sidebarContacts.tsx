@@ -1,6 +1,5 @@
 import { Loader } from '@/widgets';
 import { NavLink } from 'react-router-dom';
-import noAva from '@/shared/assets/no-ava.jpeg';
 import useSidebarContacts from '../model/useSidebarContacts';
 import { DoubleCheck, SingleCheck } from '@/shared/assets/svg';
 
@@ -13,7 +12,7 @@ const SidebarContacts = () => {
 
   return (
     <>
-      <div className='flex-1 overflow-y-auto p-3'>
+      <div className='flex-1 overflow-y-auto px-3 pb-3'>
         {chats?.length > 0 ? (
           chats?.map((el) => {
             const isSender = el.data.lastMsgSenderUid === user?.uid;
@@ -25,11 +24,6 @@ const SidebarContacts = () => {
               el.data.lastMsgReceiverUid === user?.uid
                 ? el.data.lastMsgSenderName
                 : el.data.lastMsgReceiverName;
-
-            const displayAvatar =
-              el.data.lastMsgReceiverUid === user?.uid
-                ? el.data.lastMsgSenderAvatar || noAva
-                : el.data.lastMsgReceiverAvatar || noAva;
 
             const msgTime = el.data.lastMsgTime?.seconds
               ? new Date(el.data.lastMsgTime.seconds * 1000).toLocaleTimeString(
@@ -47,15 +41,8 @@ const SidebarContacts = () => {
                 key={el.chatId}
                 className='p-2 cursor-pointer border-b border-gray-100 flex items-center gap-2'
               >
-                <div className='w-10 h-10 min-w-[40px] rounded-full overflow-hidden border'>
-                  <img
-                    src={displayAvatar}
-                    onError={(e) => {
-                      e.currentTarget.src = noAva;
-                    }}
-                    className='w-full h-full object-cover'
-                    alt='avatar'
-                  />
+                <div className='w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white font-semibold text-lg'>
+                  {displayName.charAt(0)}
                 </div>
                 <div className='flex-1'>
                   <div className='flex justify-between items-center'>

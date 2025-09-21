@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { db } from "@/shared/utils/firebase";
 import type { IMessage, IUser } from "@/shared/types";
 import { useParams, useSearchParams } from "react-router-dom";
-import { collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, writeBatch } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore";
 
 const useChatMessages = () => {
     const [text, setText] = useState<string>(''); // current input value
@@ -105,13 +105,42 @@ const useChatMessages = () => {
 
             // Commit both operations atomically
             await batch.commit();
-            console.log("Chat and message updated simultaneously!");
         } catch (err) {
             console.error("Error sending message:", err);
         } finally {
             setText(""); // ensure input is cleared
         }
     };
+
+    const markChatAsRead = async (chatId: string) => {
+        try {
+            if (!chatId) return;
+
+            // 1. Обновляем поле lastMsgRead в документе чата
+            const chatRef = doc(db, "chat", `${chatId}`);
+            await updateDoc(chatRef, { lastMsgRead: true });
+
+            // 2. Обновляем все сообщения в коллекции messages
+            const messagesRef = collection(db, "chat", `${chatId}`, "messages");
+            const snapshot = await getDocs(messagesRef);
+
+            const promises = snapshot.docs.map((messageDoc) =>
+                updateDoc(messageDoc.ref, { read: true })
+            );
+
+            await Promise.all(promises);
+
+            console.log("Все сообщения и чат помечены как прочитанные ✅");
+        } catch (error) {
+            console.error("Ошибка при обновлении статуса сообщений:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (chatId) {
+            markChatAsRead(chatId);
+        }
+    }, [chatId]);
 
     // Scroll to the last message when messages change
     useEffect(() => {

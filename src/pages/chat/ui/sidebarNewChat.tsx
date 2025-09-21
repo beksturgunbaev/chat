@@ -1,10 +1,9 @@
 import { Loader } from '@/widgets';
-import { NavLink } from 'react-router-dom';
 import noAva from '@/shared/assets/no-ava.jpeg';
 import useSidebarNewChat from '../model/useSidebarNewChat';
 
 const SidebarNewChat = () => {
-  const { clients, loading, navigate } = useSidebarNewChat();
+  const { clients, loading, navigate, handleCreateChat } = useSidebarNewChat();
 
   if (loading) {
     return <Loader height='70vh' />;
@@ -34,9 +33,9 @@ const SidebarNewChat = () => {
       </button>
 
       {clients?.map((el) => (
-        <NavLink
-          to={`/app/chat?user=${el?.uid}`}
+        <button
           key={el.uid}
+          onClick={() => handleCreateChat(el)}
           className='p-2 cursor-pointer border-b border-gray-100 flex items-center gap-2'
         >
           <div className='w-10 h-10 min-w-[40px] rounded-full overflow-hidden border'>
@@ -56,7 +55,7 @@ const SidebarNewChat = () => {
               </h3>
             </div>
           </div>
-        </NavLink>
+        </button>
       ))}
     </div>
   );

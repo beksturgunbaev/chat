@@ -3,8 +3,16 @@ import emptyChat from '@/shared/assets/empty-chat.png';
 import useChannelMessages from '../model/useChannelMessages';
 
 const ChannelMessage = () => {
-  const { user, loading, messages, channelName, messagesEndRef } =
-    useChannelMessages();
+  const {
+    user,
+    text,
+    loading,
+    setText,
+    messages,
+    channelName,
+    sendMessage,
+    messagesEndRef,
+  } = useChannelMessages();
 
   return (
     <div className='flex-1 flex flex-col max-h-[calc(100vh-144px)] h-full overflow-hidden'>
@@ -84,13 +92,24 @@ const ChannelMessage = () => {
           <div ref={messagesEndRef}></div>
         </div>
       )}
-      <form className='p-3 border-t border-gray-300 bg-white flex items-center gap-3'>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
+        className='p-3 border-t border-gray-300 bg-white flex items-center gap-3'
+      >
         <input
           type='text'
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           placeholder='Введите сообщение...'
           className='flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:border-gray-400 outline-none'
         />
-        <button className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'>
+        <button
+          type='submit'
+          className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'
+        >
           Отправить
         </button>
       </form>

@@ -25,7 +25,7 @@ export interface IMessage {
     senderUid: string;
     receiverUid: string;
     read: boolean;
-    createdAt: Timestamp;
+    time: Timestamp;
 }
 
 export interface IUser {
@@ -49,4 +49,12 @@ export interface IChannel {
     name: string;
     ownerName: string;
     members: string[]
+}
+
+export interface IChannelMessage {
+    id: string;
+    message: string;
+    senderId: string;
+    senderName: string;
+    createdAt: Timestamp;
 }

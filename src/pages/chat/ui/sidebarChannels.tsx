@@ -12,7 +12,8 @@ const SidebarChannels = () => {
   return (
     <div className='flex-1 overflow-y-auto bg-white'>
       {channels.map((ch) => (
-        <div
+        <NavLink
+          to={`/app/channels/${ch?.channelId}?channel=${ch.data.name}`}
           key={ch.channelId}
           className='flex items-center p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 transition'
         >
@@ -35,7 +36,7 @@ const SidebarChannels = () => {
               {ch?.unreadMessagesCount}
             </span>
           )}
-        </div>
+        </NavLink>
       ))}
       <NavLink
         to='users'

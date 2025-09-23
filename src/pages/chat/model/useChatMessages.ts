@@ -114,11 +114,11 @@ const useChatMessages = () => {
         try {
             if (!chatId) return;
 
-            // 1. Обновляем поле lastMsgRead в документе чата
+            // 1. Update field lastMsgRead of document
             const chatRef = doc(db, "chat", `${chatId}`);
             await updateDoc(chatRef, { lastMsgRead: true });
 
-            // 2. Обновляем все сообщения в коллекции messages
+            // 2. Update messages of the document
             const messagesRef = collection(db, "chat", `${chatId}`, "messages");
             const snapshot = await getDocs(messagesRef);
 
@@ -127,8 +127,6 @@ const useChatMessages = () => {
             );
 
             await Promise.all(promises);
-
-            console.log("Все сообщения и чат помечены как прочитанные ✅");
         } catch (error) {
             console.error("Ошибка при обновлении статуса сообщений:", error);
         }

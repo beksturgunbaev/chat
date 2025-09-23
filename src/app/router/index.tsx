@@ -23,12 +23,16 @@ export const router = createBrowserRouter(
       <Route index element={<HomePage />} />
       <Route path='sign-in' element={<AuthPage />} />
       <Route path='sign-up' element={<RegisterPage />} />
+
       <Route element={<PrivateRoute />}>
         <Route path='app' element={<ChatPage />}>
+          {/* Sidebar */}
           <Route index element={<SidebarContacts />} />
           <Route path='chat' element={<SidebarContacts />} />
           <Route path='users' element={<SidebarNewChat />} />
           <Route path='channels' element={<SidebarChannels />} />
+
+          {/* Messages */}
           <Route path='chat/:chatId' element={<ChatMessage />} />
           <Route path='channels/:channelId' element={<ChannelMessage />} />
         </Route>

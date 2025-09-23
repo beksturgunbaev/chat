@@ -8,21 +8,70 @@ const ChannelMessage = () => {
     text,
     loading,
     setText,
+    channel,
     messages,
     channelName,
     sendMessage,
     messagesEndRef,
+    subscribeToChannel,
+    unsubscribeFromChannel,
   } = useChannelMessages();
+
+  if (!channel?.members?.includes(user?.uid)) {
+    return (
+      <div className='flex flex-col items-center justify-center py-12 px-6 text-center space-y-3'>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          className='h-12 w-12 text-gray-400'
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth={2}
+            d='M12 4v16m8-8H4'
+          />
+        </svg>
+        <p className='text-gray-600 font-medium'>
+          Вы не подписаны на этот канал
+        </p>
+        <p className='text-gray-400 text-sm'>
+          Подпишитесь, чтобы писать и читать сообщения
+        </p>
+        <button
+          onClick={subscribeToChannel}
+          className='mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'
+        >
+          Подписаться
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className='flex-1 flex flex-col max-h-[calc(100vh-144px)] h-full overflow-hidden'>
-      <div className='flex items-center gap-2 py-2 px-3 border-b border-gray-300 bg-white'>
-        <div className='w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 text-white font-semibold text-lg'>
-          {channelName?.charAt(0)}
+      <div className='flex justify-between items-center px-3 py-2  border-b border-gray-300'>
+        <div className='flex items-center gap-2'>
+          <div className='w-12 h-12 flex items-center justify-center rounded-full bg-blue-500 text-white font-semibold text-lg'>
+            {channelName?.charAt(0)}
+          </div>
+          <div>
+            <p className='text-gray-800 font-medium text-lg leading-[120%]'>
+              {channelName ?? 'Не указано название'}
+            </p>
+            <p className='text-sm italic opacity-50'>
+              Админ: {channel?.owner === user?.uid ? 'Вы' : channel?.ownerName}
+            </p>
+          </div>
         </div>
-        <p className='text-gray-800 font-medium'>
-          {channelName ?? 'Не указано название'}
-        </p>
+        <button
+          onClick={unsubscribeFromChannel}
+          className='mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition'
+        >
+          Отписаться
+        </button>
       </div>
       {loading ? (
         <Loader height='100%' />

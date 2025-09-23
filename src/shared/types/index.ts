@@ -1,5 +1,7 @@
 import type { Timestamp } from "firebase/firestore";
 
+export type ReadStatus = Record<string, Timestamp>;
+
 export interface IChat {
     lastMsgSenderUid: string;
     lastMsgSenderName: string;
@@ -48,7 +50,8 @@ export interface IChannel {
     createdAt: Timestamp;
     name: string;
     ownerName: string;
-    members: string[]
+    members: string[];
+    readStatus: ReadStatus;
 }
 
 export interface IChannelMessage {

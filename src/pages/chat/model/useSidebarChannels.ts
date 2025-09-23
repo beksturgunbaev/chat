@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "@/shared/utils/firebase";
 import type { IChannel, IChannelList } from "@/shared/types";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useModal } from "@/app/providers";
 
 const useSidebarChannels = () => {
     const [channels, setChannels] = useState<IChannelList[]>([]);
@@ -9,6 +10,8 @@ const useSidebarChannels = () => {
 
     const userString = localStorage.getItem("user");
     const user = userString ? JSON.parse(userString) : null;
+
+    const { activeModal, handleOpen } = useModal();
 
     useEffect(() => {
         if (!user?.uid) return;
@@ -45,7 +48,7 @@ const useSidebarChannels = () => {
         return () => unsubscribe();
     }, [user?.uid]);
 
-    return { user, loading, channels };
+    return { user, loading, channels, handleOpen, activeModal };
 };
 
 export default useSidebarChannels;

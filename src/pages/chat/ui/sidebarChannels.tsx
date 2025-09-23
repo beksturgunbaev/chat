@@ -1,9 +1,11 @@
-import { Loader } from '@/widgets';
+import { BaseModal, Loader } from '@/widgets';
 import { NavLink } from 'react-router-dom';
 import useSidebarChannels from '../model/useSidebarChannels';
+import CreateChannelModal from './createChannelModal';
 
 const SidebarChannels = () => {
-  const { user, loading, channels } = useSidebarChannels();
+  const { user, loading, channels, handleOpen, activeModal } =
+    useSidebarChannels();
 
   if (loading) {
     return <Loader height='70vh' />;
@@ -31,19 +33,24 @@ const SidebarChannels = () => {
               </p>
             </div>
           </div>
-          {ch.unreadMessagesCount > 0 && (
+          {/* {ch.unreadMessagesCount > 0 && (
             <span className='bg-green-600 text-xs px-1.5 py-[2px] font-medium text-nowrap rounded-full text-white'>
               {ch?.unreadMessagesCount}
             </span>
-          )}
+          )} */}
         </NavLink>
       ))}
-      <NavLink
-        to='users'
+      <button
+        onClick={() => handleOpen('createChannel')}
         className='absolute bottom-3 right-3 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 font-medium text-sm rounded-2xl shadow-lg flex items-center justify-center'
       >
         Создать канал +
-      </NavLink>
+      </button>
+      {activeModal === 'createChannel' && (
+        <BaseModal sx='max-w-lg'>
+          <CreateChannelModal />
+        </BaseModal>
+      )}
     </div>
   );
 };

@@ -50,7 +50,7 @@ export interface IChannel {
     createdAt: Timestamp;
     name: string;
     ownerName: string;
-    members: string[];
+    members: { uid: string; fullName: string }[];
     readStatus: ReadStatus;
 }
 

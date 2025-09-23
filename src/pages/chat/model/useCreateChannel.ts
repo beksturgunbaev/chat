@@ -9,7 +9,7 @@ export interface CreateChannelData {
     owner: string;
     ownerName: string;
     createdAt?: Timestamp;
-    members: string[];
+    members: { uid: string, fullName: string }[];
 }
 
 export const useCreateChannel = () => {
@@ -56,7 +56,12 @@ export const useCreateChannel = () => {
             name,
             owner: user.uid,
             ownerName: user.fullName,
-            members: [user.uid],
+            members: [
+                {
+                    uid: user.uid,
+                    fullName: user.fullName,
+                },
+            ],
         };
 
         await createChannel({ data: sendData });

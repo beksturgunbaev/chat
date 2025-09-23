@@ -1,9 +1,10 @@
+import { useModal } from "@/app/providers";
 import { db } from "@/shared/utils/firebase";
-import { useEffect, useRef, useState } from "react";
-import type { IChannel, IChannelMessage } from "@/shared/types";
-import { useParams, useSearchParams } from "react-router-dom";
-import { addDoc, arrayRemove, arrayUnion, collection, doc, onSnapshot, orderBy, query, serverTimestamp, updateDoc } from "firebase/firestore";
 import { showToast } from "@/shared/utils/toastify";
+import { useEffect, useRef, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+import type { IChannel, IChannelMessage } from "@/shared/types";
+import { addDoc, arrayRemove, arrayUnion, collection, doc, onSnapshot, orderBy, query, serverTimestamp, updateDoc } from "firebase/firestore";
 
 const useChannelMessages = () => {
     const { channelId } = useParams()
@@ -15,20 +16,23 @@ const useChannelMessages = () => {
     const [messages, setMessages] = useState<IChannelMessage[]>([]); // chat messages
     const messagesEndRef = useRef<HTMLDivElement>(null); // ref for scrolling to the last message
 
+    const { activeModal, handleOpen, handleClose } = useModal()
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null; // current user
 
     // Subscribe to channel document
     useEffect(() => {
         if (!channelId) return;
+
         setLoading(true);
 
-        const channelDocRef = doc(db, "channel", channelId);
+        const channelDocRef = doc(db, "channel", `${channelId}`);
         const unSubChannel = onSnapshot(channelDocRef, (docSnap) => {
             if (docSnap.exists()) {
                 const channelData = docSnap.data() as IChannel;
                 setChannel(channelData);
             }
+            setLoading(false); // loading false only after data arrives
         });
 
         return () => unSubChannel();
@@ -37,7 +41,9 @@ const useChannelMessages = () => {
     // Subscribe to messages only if user is a member
     useEffect(() => {
         if (!channel || !user?.uid) return;
-        if (!channel.members.includes(user.uid)) return; // check subscription
+        if (!channel.members.some(member => member.uid === user.uid)) return; // check subscription
+
+        setLoading(true);
 
         const messagesRef = collection(db, "channel", `${channelId}`, "messages");
         const q = query(messagesRef, orderBy("createdAt", "asc"));
@@ -48,12 +54,11 @@ const useChannelMessages = () => {
                 ...doc.data(),
             })) as IChannelMessage[];
             setMessages(msgs);
-            setLoading(false);
+            setLoading(false); // loading false after messages arrived
         });
 
         return () => unsubMessages();
     }, [channel, channelId, user?.uid]);
-
 
     const sendMessage = async () => {
         if (!text.trim()) return;
@@ -76,20 +81,23 @@ const useChannelMessages = () => {
     };
 
     const subscribeToChannel = async () => {
-        showToast({ message: 'Идет загрузка...', isLoading: true });
         if (!channelId || !user?.uid) return;
-
+        showToast({ message: 'Загрузка...', isLoading: true });
         try {
             const channelRef = doc(db, "channel", `${channelId}`);
-            // add your uid to the field members, is it's not exists
-            await updateDoc(channelRef, {
-                members: arrayUnion(user?.uid),
-            });
             showToast({
                 message: `Вы успешно подписаны на канал ${channel?.name}`,
                 type: 'success',
                 isLoading: false,
             });
+            // add your uid to the field members, is it's not exists
+            await updateDoc(channelRef, {
+                members: arrayUnion({
+                    uid: user.uid,
+                    fullName: user.fullName,
+                }),
+            });
+
         } catch (err) {
             showToast({
                 message: 'Ошибка с сервера',
@@ -100,21 +108,24 @@ const useChannelMessages = () => {
         }
     };
 
-    const unsubscribeFromChannel = async () => {
-        showToast({ message: 'Идет загрузка...', isLoading: true });
-        if (!channelId || !user?.uid) return;
+    const unsubscribeFromChannel = async (text: string) => {
+        if (!channelId || !user?.uid || !user?.fullName) return;
+        showToast({ message: 'Загрузка...', isLoading: true });
 
         try {
             const channelRef = doc(db, "channel", `${channelId}`);
-            // remove your uid from the field members
-            await updateDoc(channelRef, {
-                members: arrayRemove(user.uid),
-            });
             showToast({
-                message: `Вы отписались от канала ${channel?.name}`,
+                message: `${text} ${channel?.name}`,
                 type: 'success',
                 isLoading: false,
             });
+            await updateDoc(channelRef, {
+                members: arrayRemove({
+                    uid: user.uid,
+                    fullName: user.fullName,
+                }),
+            });
+
         } catch (err) {
             showToast({
                 message: 'Ошибка с сервера',
@@ -125,11 +136,54 @@ const useChannelMessages = () => {
         }
     };
 
+    const deleteFromChannel = async (member: { uid: string; fullName: string }) => {
+        if (!channelId) return;
+        showToast({ message: 'Загрузка...', isLoading: true });
+
+        try {
+            const channelRef = doc(db, "channel", channelId);
+            handleClose();
+
+            await updateDoc(channelRef, {
+                members: arrayRemove(member),
+            });
+
+            showToast({
+                message: `Вы успешно удалили ${member.fullName} из канала`,
+                type: 'success',
+                isLoading: false,
+            });
+        } catch (err) {
+            showToast({
+                message: 'Ошибка с сервера',
+                type: 'error',
+                isLoading: false,
+            });
+            console.error("Failed to remove member:", err);
+        }
+    };
+
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
     }, [messages]);
 
-    return { user, text, setText, channel, loading, messages, channelName, sendMessage, messagesEndRef, subscribeToChannel, unsubscribeFromChannel }
+    return {
+        user,
+        text,
+        setText,
+        channel,
+        loading,
+        messages,
+        handleOpen,
+        activeModal,
+        sendMessage,
+        channelName,
+        messagesEndRef,
+        deleteFromChannel,
+        subscribeToChannel,
+        unsubscribeFromChannel
+    }
 }
 
 export default useChannelMessages

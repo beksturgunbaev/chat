@@ -4,7 +4,7 @@ import useSidebarContacts from '../model/useSidebarContacts';
 import { DoubleCheck, SingleCheck } from '@/shared/assets/svg';
 
 const SidebarContacts = () => {
-  const { user, chats, loading } = useSidebarContacts();
+  const { user, chats, input, setInput, loading } = useSidebarContacts();
 
   if (loading) {
     return <Loader height='70vh' />;
@@ -13,6 +13,15 @@ const SidebarContacts = () => {
   return (
     <>
       <div className='flex-1 overflow-y-auto px-3 pb-3'>
+        <form className='mb-2'>
+          <input
+            type='search'
+            value={input}
+            placeholder='Поиск по имени...'
+            onChange={(e) => setInput(e.target.value)}
+            className='w-full outline-none border border-gray-300 px-3 py-1 rounded-md'
+          />
+        </form>
         {chats?.length > 0 ? (
           chats?.map((el) => {
             const isSender = el.data.lastMsgSenderUid === user?.uid;

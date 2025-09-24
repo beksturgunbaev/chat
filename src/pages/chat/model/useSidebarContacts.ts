@@ -6,6 +6,7 @@ import { collection, getDocs, onSnapshot, orderBy, query, where } from "firebase
 const useSidebarContacts = () => {
     const [chats, setChats] = useState<IChatList[] | []>([]);
     const [loading, setLoading] = useState(true);
+    const [input, setInput] = useState<string>('')
 
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
@@ -60,7 +61,20 @@ const useSidebarContacts = () => {
                     };
                 })
             );
-            setChats(chatsWithUnread);
+
+            const filteredChats = input
+                ? chatsWithUnread.filter((c) => {
+                    const term = input.toLowerCase();
+
+                    return (
+                        c.data.lastMsgSenderName?.toLowerCase().includes(term) ||
+                        c.data.lastMsgReceiverName?.toLowerCase().includes(term)
+                    );
+                })
+                : chatsWithUnread;
+
+
+            setChats(filteredChats);
             setLoading(false);
         });
 
@@ -70,9 +84,9 @@ const useSidebarContacts = () => {
             unsubscribeChats.forEach(fn => fn());
             unsubscribeMessages.forEach(fn => fn());
         };
-    }, [user?.uid]);
+    }, [user?.uid, input]);
 
-    return { user, chats, loading };
+    return { user, chats, input, setInput, loading };
 };
 
 export default useSidebarContacts;
